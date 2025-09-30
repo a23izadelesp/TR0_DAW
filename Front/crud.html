@@ -2,188 +2,16 @@
 <html lang="ca">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>CRUD Bandera Quiz</title>
-  <style>
-    body {
-      font-family: 'Segoe UI', Arial, sans-serif;
-      background: #eef2f5;
-      margin: 20px;
-      color: #333;
-    }
-
-    h1 {
-      text-align: center;
-      color: #007bff;
-      margin-bottom: 20px;
-    }
-
-    form {
-      max-width: 700px;
-      margin: 0 auto 25px;
-      background: #fff;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }
-
-    label {
-      margin-top: 12px;
-      display: block;
-      font-weight: 600;
-    }
-
-    input[type="text"],
-    input[type="number"] {
-      width: 100%;
-      padding: 8px 10px;
-      margin-top: 4px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      box-sizing: border-box;
-      transition: border 0.2s;
-    }
-
-    input[type="text"]:focus,
-    input[type="number"]:focus {
-      border-color: #007bff;
-      outline: none;
-    }
-
-    button {
-      margin: 6px 4px 0;
-      padding: 8px 14px;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      font-weight: 600;
-      transition: background 0.3s, transform 0.1s;
-    }
-
-    button:hover {
-      transform: scale(1.03);
-    }
-
-    button.create {
-      background-color: #28a745;
-      color: white;
-    }
-
-    button.create:hover {
-      background-color: #218838;
-    }
-
-    button.update {
-      background-color: #ffc107;
-      color: #212529;
-    }
-
-    button.update:hover {
-      background-color: #e0a800;
-    }
-
-    button.delete {
-      background-color: #dc3545;
-      color: white;
-    }
-
-    button.delete:hover {
-      background-color: #c82333;
-    }
-
-    button#resetForm {
-      background-color: #6c757d;
-      color: white;
-    }
-
-    button#resetForm:hover {
-      background-color: #5a6268;
-    }
-
-    table {
-      border-collapse: collapse;
-      width: 100%;
-      background: #fff;
-      border-radius: 8px;
-      overflow: hidden;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-    }
-
-    th, td {
-      border: solid 1px #ececec;
-      padding: 12px;
-      text-align: left;
-    }
-
-    th {
-      background: #007bff;
-      color: white;
-      text-transform: uppercase;
-      font-size: 0.9rem;
-      letter-spacing: .6px;
-    }
-
-    tbody tr:nth-child(even) {
-      background: #f8f9fa;
-    }
-
-    tbody tr:hover {
-      background: #e9f3ff;
-    }
-
-    img.bandera {
-      width: 55px;
-      height: auto;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-    }
-
-    @media (max-width: 800px) {
-      form {
-        padding: 15px;
-      }
-
-      table, thead, tbody, th, td, tr {
-        display: block;
-      }
-
-      thead tr {
-        display: none;
-      }
-
-      tbody tr {
-        margin-bottom: 15px;
-        border-bottom: 2px solid #ddd;
-        padding: 10px;
-        background: white;
-      }
-
-      td {
-        padding: 8px;
-        border: none;
-      }
-
-      td:before {
-        font-weight: bold;
-        display: block;
-        margin-bottom: 4px;
-        color: #007bff;
-      }
-
-      td:nth-of-type(1):before { content: "ID"; }
-      td:nth-of-type(2):before { content: "Pregunta"; }
-      td:nth-of-type(3):before { content: "Respostes"; }
-      td:nth-of-type(4):before { content: "Índex Correcte"; }
-      td:nth-of-type(5):before { content: "Bandera"; }
-      td:nth-of-type(6):before { content: "Accions"; }
-    }
-  </style>
+  <link rel="stylesheet" href="css/crud.css" />
 </head>
 <body>
   <h1>Gestionar Preguntes</h1>
   <form id="formPregunta">
     <input type="hidden" id="questionId" value="" />
     <label>Pregunta:
-      <input type="text" id="questionText" required />
+      <input type="text" id="questionText" name="question" required />
     </label>
     <label>Resposta 1:
       <input type="text" id="answer1" required />
@@ -201,7 +29,10 @@
       <input type="number" id="correctIndex" min="0" max="3" required />
     </label>
     <label>URL Imatge:
-      <input type="text" id="imatge" required />
+      <input type="text" id="imatge" name="imatge" />
+    </label>
+    <label>Subir nueva imagen:
+      <input type="file" id="imageFile" name="imageFile" accept="image/*" />
     </label>
     <button type="submit" class="create">Crear / Actualitzar</button>
     <button type="button" id="resetForm">Netejar</button>
@@ -219,86 +50,7 @@
     </thead>
     <tbody id="tablaPreguntas"></tbody>
   </table>
-  <script>
-    const urlBase = "/quiz.php";
-    async function listarPreguntas() {
-      const res = await fetch(urlBase + "?action=list");
-      const data = await res.json();
-      const tbody = document.getElementById("tablaPreguntas");
-      tbody.innerHTML = "";
-      data.questions.forEach(q => {
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-          <td>${q.id}</td>
-          <td>${q.question}</td>
-          <td>${q.answers.map(a => `<div>${a}</div>`).join('')}</td>
-          <td>${q.correctIndex}</td>
-          <td><img class="bandera" src="${q.imatge}" alt="Bandera" /></td>
-          <td>
-            <button class="update" onclick="editarPregunta(${q.id})">Editar</button>
-            <button class="delete" onclick="borrarPregunta(${q.id})">Borrar</button>
-          </td>
-        `;
-        tbody.appendChild(tr);
-      });
-    }
-    function resetForm() {
-      document.getElementById("formPregunta").reset();
-      document.getElementById("questionId").value = "";
-    }
-    async function editarPregunta(id) {
-      const res = await fetch(urlBase + "?action=list");
-      const data = await res.json();
-      const pregunta = data.questions.find(q => q.id == id);
-      if (!pregunta) return alert("Pregunta no trobada");
-      document.getElementById("questionId").value = pregunta.id;
-      document.getElementById("questionText").value = pregunta.question;
-      document.getElementById("answer1").value = pregunta.answers[0];
-      document.getElementById("answer2").value = pregunta.answers[1];
-      document.getElementById("answer3").value = pregunta.answers[2];
-      document.getElementById("answer4").value = pregunta.answers[3];
-      document.getElementById("correctIndex").value = pregunta.correctIndex;
-      document.getElementById("imatge").value = pregunta.imatge;
-    }
-    async function borrarPregunta(id) {
-      if (!confirm("Eliminar aquesta pregunta?")) return;
-      await fetch(urlBase + "?action=delete&id=" + id, { method: "POST" });
-      listarPreguntas();
-      resetForm();
-    }
-    document.getElementById("formPregunta").addEventListener("submit", async e => {
-      e.preventDefault();
-      const id = document.getElementById("questionId").value;
-      const payload = {
-        question: document.getElementById("questionText").value,
-        answers: [
-          document.getElementById("answer1").value,
-          document.getElementById("answer2").value,
-          document.getElementById("answer3").value,
-          document.getElementById("answer4").value
-        ],
-        correctIndex: parseInt(document.getElementById("correctIndex").value, 10),
-        imatge: document.getElementById("imatge").value
-      };
-      let url = urlBase + "?action=create";
-      if (id) url = urlBase + "?action=update&id=" + id;
-      const res = await fetch(url, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload)
-      });
-      const resp = await res.json();
-      if (resp.error) alert("Error: " + resp.error);
-      else {
-        alert("Pregunta " + (id ? "actualitzada" : "creada") + " correctament");
-        listarPreguntas();
-        resetForm();
-      }
-    });
-    document.getElementById("resetForm").addEventListener("click", e => {
-      e.preventDefault(); resetForm();
-    });
-    listarPreguntas();
-  </script>
+
+  <script src="js/crud.js"></script>
 </body>
 </html>

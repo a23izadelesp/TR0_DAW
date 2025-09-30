@@ -1,0 +1,166 @@
+body {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: #eef2f5;
+  margin: 20px;
+  color: #333;
+}
+
+h1 {
+  text-align: center;
+  color: #007bff;
+  margin-bottom: 20px;
+}
+
+form {
+  max-width: 700px;
+  margin: 0 auto 25px;
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+label {
+  margin-top: 12px;
+  display: block;
+  font-weight: 600;
+}
+
+input[type="text"],
+input[type="number"] {
+  width: 100%;
+  padding: 8px 10px;
+  margin-top: 4px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  box-sizing: border-box;
+  transition: border 0.2s;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+button {
+  margin: 6px 4px 0;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.3s, transform 0.1s;
+}
+
+button:hover {
+  transform: scale(1.03);
+}
+
+button.create {
+  background-color: #28a745;
+  color: white;
+}
+
+button.create:hover {
+  background-color: #218838;
+}
+
+button.update {
+  background-color: #ffc107;
+  color: #212529;
+}
+
+button.update:hover {
+  background-color: #e0a800;
+}
+
+button.delete {
+  background-color: #dc3545;
+  color: white;
+}
+
+button.delete:hover {
+  background-color: #c82333;
+}
+
+button#resetForm {
+  background-color: #6c757d;
+  color: white;
+}
+
+button#resetForm:hover {
+  background-color: #5a6268;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  background: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+th, td {
+  border: solid 1px #ececec;
+  padding: 12px;
+  text-align: left;
+}
+
+th {
+  background: #007bff;
+  color: white;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+  letter-spacing: .6px;
+}
+
+tbody tr:nth-child(even) {
+  background: #f8f9fa;
+}
+
+tbody tr:hover {
+  background: #e9f3ff;
+}
+
+img.bandera {
+  width: 55px;
+  height: auto;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+@media (max-width: 800px) {
+  form {
+    padding: 15px;
+  }
+  table, thead, tbody, th, td, tr {
+    display: block;
+  }
+  thead tr {
+    display: none;
+  }
+  tbody tr {
+    margin-bottom: 15px;
+    border-bottom: 2px solid #ddd;
+    padding: 10px;
+    background: white;
+  }
+  td {
+    padding: 8px;
+    border: none;
+  }
+  td:before {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 4px;
+    color: #007bff;
+  }
+  td:nth-of-type(1):before { content: "ID"; }
+  td:nth-of-type(2):before { content: "Pregunta"; }
+  td:nth-of-type(3):before { content: "Respostes"; }
+  td:nth-of-type(4):before { content: "Índex Correcte"; }
+  td:nth-of-type(5):before { content: "Bandera"; }
+  td:nth-of-type(6):before { content: "Accions"; }
+}
