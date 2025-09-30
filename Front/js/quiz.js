@@ -1,4 +1,4 @@
-const API_BASE_URL = "http://localhost:8000/quiz.php";
+const API_BASE_URL = "/quiz.php";
 
 let quizState = null;
 let timer = 0;
