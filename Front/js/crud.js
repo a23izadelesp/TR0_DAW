@@ -1,32 +1,40 @@
+// URL base para llamar a la API PHP del quiz
 const urlBase = "/quiz.php";
 
+// Referencias a los inputs para la URL de la imagen y la subida de archivo
 const imageUrlInput = document.getElementById("imatge");
 const imageFileInput = document.getElementById("imageFile");
 
-// Control exclusivo URL o archivo
+// Control para que solo se pueda usar URL o archivo, no ambos a la vez
 imageFileInput.addEventListener("change", () => {
   if (imageFileInput.files.length > 0) {
+    // Si hay archivo seleccionado, deshabilita la URL y la limpia
     imageUrlInput.disabled = true;
     imageUrlInput.value = "";
   } else {
+    // Si no hay archivo, habilita el input URL
     imageUrlInput.disabled = false;
   }
 });
 
 imageUrlInput.addEventListener("input", () => {
   if (imageUrlInput.value.trim().length > 0) {
+    // Si hay texto en URL, limpia y deshabilita el input de archivo
     imageFileInput.value = "";  
     imageFileInput.disabled = true;
   } else {
+    // Si no hay texto, habilita el input de archivo
     imageFileInput.disabled = false;
   }
 });
 
+// Función para listar todas las preguntas desde la API y mostrarlas en la tabla
 async function listarPreguntas() {
   const res = await fetch(urlBase + "?action=list");
   const data = await res.json();
   const tbody = document.getElementById("tablaPreguntas");
-  tbody.innerHTML = "";
+  tbody.innerHTML = ""; // Limpia la tabla antes de añadir datos nuevos
+  // Por cada pregunta crea una fila con datos y botones para editar/borrar
   data.questions.forEach(q => {
     const tr = document.createElement("tr");
     tr.innerHTML = `
@@ -44,13 +52,16 @@ async function listarPreguntas() {
   });
 }
 
+// Resetea el formulario a su estado inicial
 function resetForm() {
   document.getElementById("formPregunta").reset();
   document.getElementById("questionId").value = "";
+  // Habilita ambos inputs de imagen por si el usuario quiere volver a elegir
   imageUrlInput.disabled = false;
   imageFileInput.disabled = false;
 }
 
+// Carga los datos de una pregunta para editar, llenando el formulario
 async function editarPregunta(id) {
   const res = await fetch(urlBase + "?action=list");
   const data = await res.json();
@@ -69,6 +80,7 @@ async function editarPregunta(id) {
   imageFileInput.disabled = false;
 }
 
+// Borra una pregunta tras confirmación y refresca la lista
 async function borrarPregunta(id) {
   if (!confirm("Eliminar aquesta pregunta?")) return;
   const res = await fetch(urlBase + `?action=delete&id=${id}`, { method: "GET" });
@@ -82,6 +94,7 @@ async function borrarPregunta(id) {
   }
 }
 
+// Maneja el envío del formulario para crear o actualizar preguntas
 document.getElementById("formPregunta").addEventListener("submit", async e => {
   e.preventDefault();
 
@@ -89,6 +102,7 @@ document.getElementById("formPregunta").addEventListener("submit", async e => {
   const formElement = document.getElementById("formPregunta");
   const formData = new FormData(formElement);
 
+  // Recolecta las respuestas en un array para enviarlas como JSON
   const answers = [
     document.getElementById("answer1").value,
     document.getElementById("answer2").value,
@@ -96,22 +110,27 @@ document.getElementById("formPregunta").addEventListener("submit", async e => {
     document.getElementById("answer4").value
   ];
 
+  // Obtiene valores para controlar exclusividad URL/archivo
   const urlValue = document.getElementById("imatge").value.trim();
   const fileValue = document.getElementById("imageFile").files.length > 0;
 
+  // Valida que no se elijan ambos inputs a la vez
   if (urlValue && fileValue) {
     alert("Debes elegir entre introducir una URL o subir una imagen, no ambas.");
     return;
   }
 
+  // Reemplaza campo answers por el JSON stringificado
   formData.delete("answers");
   formData.append("answers", JSON.stringify(answers));
   formData.set("correctIndex", document.getElementById("correctIndex").value);
 
+  // Define la URL dependiendo si es nueva pregunta o actualización
   let url = urlBase + "?action=create";
   if (id) url = urlBase + "?action=update&id=" + id;
 
   try {
+    // Envía la solicitud POST con el formulario
     const res = await fetch(url, {
       method: "POST",
       body: formData
@@ -131,6 +150,7 @@ document.getElementById("formPregunta").addEventListener("submit", async e => {
       alert("Error: " + resp.error);
       console.error("Detalles error:", resp);
     } else {
+      // Si servidor devuelve URL de imagen nueva, actualiza el input URL
       if (resp.imatge) {
         imageUrlInput.value = resp.imatge;
       }
@@ -143,9 +163,11 @@ document.getElementById("formPregunta").addEventListener("submit", async e => {
   }
 });
 
+// Evento para el botón de reset que limpia el formulario
 document.getElementById("resetForm").addEventListener("click", e => {
   e.preventDefault();
   resetForm();
 });
 
+// Inicialmente lista las preguntas al cargar la página
 listarPreguntas();
