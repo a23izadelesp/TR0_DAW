@@ -1,0 +1,3 @@
+# .gitignore para carpetas y archivos generados por Docker y MySQL
+/db_data/
+/php/images/
