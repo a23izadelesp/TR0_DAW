@@ -4,28 +4,19 @@ services:
   web:
     build:
       context: ./images
-      dockerfile: Dockerfile_php
     ports:
       - "8080:80"
     volumes:
-      - ./php:/var/www/html
-      - ./Front:/var/www/html/Front
-    environment:
-      VAR1: "sóc una pera i estic al docker-compose"
-      VAR2: ${VAR2}
+      - ./:/var/www/html
     depends_on:
       - db
 
   db:
     image: mysql:9.3
     environment:
-      MYSQL_ROOT_PASSWORD: passwordDeRootQueNoShaDeFerServirMai
-      MYSQL_USER: usuari
-      MYSQL_PASSWORD: paraula_de_pas
+      MYSQL_ROOT_PASSWORD: ""
+      MYSQL_DATABASE: quizdb
       LANG: C.UTF-8
-    volumes:
-      - ./db_data:/var/lib/mysql
-      - ./db_init:/docker-entrypoint-initdb.d
 
   adminer:
     image: adminer

@@ -16,9 +16,9 @@ header('Access-Control-Allow-Methods: GET, POST');
 
 // Parámetros de conexión a la base de datos
 $servername = "localhost"; 
-$username = "a23izadelesp_quizdb";
-$password = "0473a4LwT1JmkZGr_";
-$dbname = "a23izadelesp_quizdb";
+$username = "root";
+$password = "";
+$dbname = "quizdb";
 
 // JSON con las preguntas iniciales: cada objeto tiene id, pregunta, respuestas, índice correcto e imagen
 $questionsJson = <<<JSON

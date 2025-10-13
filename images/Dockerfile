@@ -4,9 +4,6 @@ FROM php:8.2-apache
 # Instala las extensiones necesarias para MySQL
 RUN docker-php-ext-install mysqli pdo pdo_mysql
 
-# Copia el código fuente de la aplicación (opcional, ya se monta por volumen)
-# COPY ../php /var/www/html
-
 # Habilita el módulo de reescritura de Apache
 RUN a2enmod rewrite
 
@@ -15,7 +12,6 @@ ENV APACHE_DOCUMENT_ROOT /var/www/html
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
 
 EXPOSE 80
- 
 # Permite servir imágenes subidas desde /var/www/html/images
 RUN mkdir -p /var/www/html/images \
-	&& chown -R www-data:www-data /var/www/html/images
+    && chown -R www-data:www-data /var/www/html/images
