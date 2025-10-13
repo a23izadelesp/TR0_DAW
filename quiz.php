@@ -15,7 +15,7 @@ header('Access-Control-Allow-Headers: Content-Type');
 header('Access-Control-Allow-Methods: GET, POST');
 
 // Parámetros de conexión a la base de datos
-$servername = "localhost"; 
+$servername = "db"; 
 $username = "root";
 $password = "";
 $dbname = "quizdb";

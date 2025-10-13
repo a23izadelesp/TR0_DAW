@@ -16,6 +16,7 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: ""
       MYSQL_DATABASE: quizdb
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
       LANG: C.UTF-8
 
   adminer:
